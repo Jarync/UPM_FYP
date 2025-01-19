@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cleft lip analysis system</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    .main-header {
+      background: linear-gradient(135deg, #4CAF50, #45a049);
+      padding: 15px 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+
+    .main-header h1 {
+      color: white;
+      margin: 0;
+      font-size: 2em;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 15px;
+      padding: 0 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    nav a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .content {
+      margin-top: 150px;
+      padding: 20px;
+      min-height: calc(100vh - 150px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .messages {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 15px;
+      border-radius: 10px;
+      background: white;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .messages p {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 8px;
+      background: rgba(76, 175, 80, 0.1);
+      color: #2c3e50;
+      border-left: 4px solid #4CAF50;
+    }
+
+    /* 添加导航图标 */
+    nav a[href*="upload"]::before { content: "\f093"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+    nav a[href*="camera"]::before { content: "\f030"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+    nav a[href*="add_case"]::before { content: "\f067"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+    nav a[href*="cases"]::before { content: "\f07c"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+    nav a[href*="statistics"]::before { content: "\f080"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+    nav a[href*="logout"]::before { content: "\f2f5"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+    nav a[href*="login"]::before { content: "\f2f6"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+    nav a[href*="register"]::before { content: "\f234"; font-family: "Font Awesome 5 Free"; font-weight: 900; }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .main-header h1 {
+        font-size: 1.5em;
+      }
+
+      nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      nav a {
+        width: 80%;
+        justify-content: center;
+      }
+
+      .content {
+        margin-top: 200px;
+      }
+    }
+
+    /* 添加装饰性背景元素 */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* 滚动条美化 */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #4CAF50;
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #45a049;
+    }
+
+    .header-content {
+      position: relative;
+      width: 100%;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-info {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 8px 15px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      z-index: 1001;
+    }
+
+    .user-greeting {
+      color: white;
+      font-size: 0.9em;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .user-greeting i {
+      font-size: 1.2em;
+      margin-right: 5px;
+    }
+
+    .user-info:hover {
+      background: rgba(255, 255, 255, 0.25);
+      transform: translateY(-50%) scale(1.02);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        padding: 10px;
+      }
+
+      .user-info {
+        position: static;
+        transform: none;
+        margin-bottom: 10px;
+        width: auto;
+      }
+
+      .main-header h1 {
+        padding: 0;
+        font-size: 1.5em;
+      }
+    }
+  </style>
+</head>
+<body>
+<header class="main-header">
+  <div class="header-content">
+    <div class="user-info">
+      {% if session.user_id %}
+        {% if session['role'] == 'doctor' %}
+          <span class="user-greeting">
+            <i class="fas fa-user-md"></i> Dear Doctor {{ session.username }}
+          </span>
+        {% else %}
+          <span class="user-greeting">
+            <i class="fas fa-user"></i> Dear User {{ session.username }}
+          </span>
+        {% endif %}
+      {% endif %}
+    </div>
+    <h1>Cleft lip analysis system</h1>
+  </div>
+  <nav>
+    {% if session.user_id %}
+        <a href="{{ url_for('profile') }}">My Profile</a>
+        {% if session['role'] == 'patient' %}
+            <a href="{{ url_for('upload') }}">Upload & Preview</a>
+            <a href="{{ url_for('camera') }}">Camera Detection</a>
+            <a href="{{ url_for('add_case') }}">Add Case</a>
+            <a href="{{ url_for('view_my_cases') }}">My Cases</a>
+        {% elif session['role'] == 'doctor' %}
+            <a href="{{ url_for('upload') }}">Upload & Preview</a>
+            <a href="{{ url_for('camera') }}">Camera Detection</a>
+            <a href="{{ url_for('add_case_for_patient') }}">Add Case for Patient</a>
+            <a href="{{ url_for('view_all_cases') }}">All Cases</a>
+            <a href="{{ url_for('statistics') }}">Statistics</a>
+        {% endif %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+        <a href="{{ url_for('register') }}">Register</a>
+        <a href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+  </nav>
+</header>
+
+<div class="content">
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="messages">
+        {% for msg in messages %}
+          <p>{{ msg }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</div>
+</body>
+</html>

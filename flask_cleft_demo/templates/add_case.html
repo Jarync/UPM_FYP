@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-box">
+    <h2>Add New Case</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <div style="display: flex; justify-content: center; gap: 50px;">
+            <!-- Pre-Op Section -->
+            <div class="image-section">
+                <h3>Pre-Op</h3>
+                <div id="preOpResult" class="image-preview">
+                    <img id="preOpImage" style="display: none; max-width: 100%; height: auto;">
+                    <div id="preOpPlaceholder">No Image</div>
+                </div>
+                <input type="file" name="pre_op_image" id="pre-op-upload" accept="image/*">
+                <label for="pre-op-upload" class="custom-file-label">
+                    Select Pre-Op File
+                </label>
+            </div>
+
+            <!-- Post-Op Section -->
+            <div class="image-section">
+                <h3>Post-Op</h3>
+                <div id="postOpResult" class="image-preview">
+                    <img id="postOpImage" style="display: none; max-width: 100%; height: auto;">
+                    <div id="postOpPlaceholder">No Image</div>
+                </div>
+                <input type="file" name="post_op_image" id="post-op-upload" accept="image/*">
+                <label for="post-op-upload" class="custom-file-label">
+                    Select Post-Op File
+                </label>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <button type="submit" id="addCaseBtn" class="btn btn-primary" disabled>Add Case</button>
+        </div>
+    </form>
+</div>
+
+<style>
+.image-preview {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.btn {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-primary:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+</style>
+
+<script>
+document.getElementById('pre-op-upload').addEventListener('change', handleFileSelect);
+document.getElementById('post-op-upload').addEventListener('change', handleFileSelect);
+
+function handleFileSelect() {
+    const preOpFile = document.getElementById('pre-op-upload').files.length > 0;
+    const postOpFile = document.getElementById('post-op-upload').files.length > 0;
+    
+    // 显示选中的图片预览
+    if (this.files && this.files[0]) {
+        const reader = new FileReader();
+        const previewId = this.id === 'pre-op-upload' ? 'preOpImage' : 'postOpImage';
+        const placeholderId = this.id === 'pre-op-upload' ? 'preOpPlaceholder' : 'postOpPlaceholder';
+        
+        reader.onload = function(e) {
+            const img = document.getElementById(previewId);
+            img.src = e.target.result;
+            img.style.display = 'block';
+            document.getElementById(placeholderId).style.display = 'none';
+        };
+        
+        reader.readAsDataURL(this.files[0]);
+    }
+    
+    // 启用/禁用添加按钮
+    document.getElementById('addCaseBtn').disabled = !(preOpFile || postOpFile);
+}
+</script>
+{% endblock %}

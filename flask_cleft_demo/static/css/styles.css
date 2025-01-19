@@ -1,0 +1,241 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #f4f4f9, #e0eafc); /* 渐变背景 */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.main-header {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+nav a {
+    margin: 0 15px;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    text-align: center;
+    padding: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.image-section h3 {
+    text-align: center; /* Centers the text horizontally */
+    margin-bottom: 10px; /* Adds some spacing between the text and the image */
+}
+
+.image-section {
+    display: inline-block;
+    text-align: center; /* Ensures that both text and the image are aligned */
+    width: 200px; /* Optional: Adjust this to match the image size */
+}
+
+/* 隐藏原始文件选择按钮 */
+input[type="file"] {
+    display: none;
+}
+
+/* 自定义按钮样式 */
+.custom-file-label {
+    display: inline-block;
+    background-color: #4CAF50; /* 按钮背景颜色 */
+    color: white;             /* 文字颜色 */
+    padding: 10px 20px;       /* 内边距 */
+    border-radius: 5px;       /* 圆角效果 */
+    cursor: pointer;          /* 鼠标样式 */
+    font-size: 14px;          /* 字体大小 */
+    text-align: center;       /* 文字居中 */
+    line-height: normal;      /* 确保文字垂直对齐 */
+    margin: 5px;
+}
+
+/* 悬停效果 */
+.custom-file-label:hover {
+    background-color: #45a049;
+}
+
+/* 确保文字显示 */
+.custom-file-label span {
+    display: inline-block;
+    vertical-align: middle; /* 垂直对齐 */
+}
+
+.content {
+    margin-top: 120px; /* Adjust margin to account for fixed header */
+    width: 100%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 120px auto 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.illustration {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.illustration img {
+    max-width: 100%;
+    height: auto;
+}
+
+.login-container {
+    flex: 1;
+    background-color: #fff;
+    padding: 60px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 15px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+.btn-primary {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    background-color: #45a049;
+}
+
+.camera-page {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.camera-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.camera-frame {
+    border: 5px solid #4CAF50;
+    border-radius: 10px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.camera-frame img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.statistics-page {
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+#myPieChart {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.chart-container {
+    width: 50%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.content-box {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    text-align: center;
+}
+
+
+
+

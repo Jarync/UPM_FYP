@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="statistics-page">
+  <h2>Statistics</h2>
+  <div id="myPieChart"></div>
+  <p>Total Cases: {{ total_cases }}</p>
+  <p>Correct Cases: {{ correct_cases }}</p>
+  <p>Accuracy: {{ accuracy }}%</p>
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+  var data = [{
+    values: [{{ correct_cases }}, {{ total_cases - correct_cases }}],
+    labels: ['Correct Cases', 'Incorrect Cases'],
+    type: 'pie',
+    hole: 0.4,
+    marker: {
+      colors: ['#4CAF50', '#FF6384']
+    }
+  }];
+
+  var layout = {
+    title: 'Case Distribution',
+    showlegend: true,
+    annotations: [{
+      font: {
+        size: 20
+      },
+      showarrow: false,
+      text: 'Cases',
+      x: 0.5,
+      y: 0.5
+    }]
+  };
+
+  Plotly.newPlot('myPieChart', data, layout);
+</script>
+{% endblock %}

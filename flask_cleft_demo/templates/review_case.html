@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="review-container">
+    <div class="review-header">
+        <h2>Review Case #{{ case.id }}</h2>
+        <div class="patient-info">
+            <span class="info-badge">Patient: {{ case.user.username }}</span>
+        </div>
+    </div>
+
+    <div class="images-container">
+        <!-- Pre-Op Section -->
+        <div class="image-section">
+            <div class="image-card">
+                <h3>Pre-Op Image</h3>
+                <div class="image-frame">
+                    {% if case.pre_image %}
+                        <img src="data:image/png;base64,{{ case.pre_image }}" alt="Pre-Op Image">
+                    {% else %}
+                        <div class="no-image">No Pre-Op Image</div>
+                    {% endif %}
+                </div>
+                <div class="severity-badge">
+                    <span>Severity: {{ case.pre_severity }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post-Op Section -->
+        <div class="image-section">
+            <div class="image-card">
+                <h3>Post-Op Image</h3>
+                <div class="image-frame">
+                    {% if case.post_image %}
+                        <img src="data:image/png;base64,{{ case.post_image }}" alt="Post-Op Image">
+                    {% else %}
+                        <div class="no-image">No Post-Op Image</div>
+                    {% endif %}
+                </div>
+                <div class="severity-badge">
+                    <span>Severity: {{ case.post_severity }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="review-actions">
+        <form method="POST">
+            <button class="btn-approve" name="approve" type="submit">
+                <i class="fas fa-check"></i> Approve
+            </button>
+            <button class="btn-reject" name="reject" type="submit">
+                <i class="fas fa-times"></i> Reject
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+.review-container {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.review-header {
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.review-header h2 {
+    color: #2c3e50;
+    font-size: 2em;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.patient-info {
+    margin-bottom: 20px;
+}
+
+.info-badge {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.images-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.image-section {
+    flex: 1;
+    max-width: 400px;
+}
+
+.image-card {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.image-card:hover {
+    transform: translateY(-5px);
+}
+
+.image-card h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.image-frame {
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    background: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.image-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.severity-badge {
+    background: #e9ecef;
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.severity-badge span {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.review-actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.review-actions button {
+    padding: 12px 30px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-approve {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+}
+
+.btn-reject {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.btn-approve:hover, .btn-reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.no-image {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* 添加一些装饰性元素 */
+.review-container::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: linear-gradient(45deg, #4CAF50 0%, transparent 100%);
+    z-index: -1;
+    border-radius: 25px;
+    opacity: 0.1;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .images-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-section {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+</style>
+{% endblock %}

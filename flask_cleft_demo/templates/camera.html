@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="camera-page">
+  <h2>Real-Time Face Detection with Landmarks</h2>
+  <div class="camera-container">
+    <div class="camera-frame">
+      <img src="{{ url_for('video_feed') }}" alt="Camera Feed">
+    </div>
+  </div>
+  <p>Landmarks are displayed in real-time.</p>
+</div>
+{% endblock %}

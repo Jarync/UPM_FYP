@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-box">
+  <h2>Add Case for Patient</h2>
+  <form method="POST" enctype="multipart/form-data">
+    <label for="patient_id">Select Patient:</label>
+    <select name="patient_id" id="patient_id" required>
+        {% for patient in patients %}
+        <option value="{{ patient.id }}">{{ patient.username }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <div style="display: flex; justify-content: center; gap: 50px;">
+        <!-- Pre-Op Section -->
+        <div class="image-section">
+            <h3>Pre-Op</h3>
+            <div id="preOpResult" class="image-preview">
+                <img id="preOpImage" style="display: none; max-width: 100%; height: auto;">
+                <div id="preOpPlaceholder">No Image</div>
+            </div>
+            <input type="file" name="pre_op_image" id="pre-op-upload" accept="image/*">
+            <label for="pre-op-upload" class="custom-file-label">
+                Select Pre-Op File
+            </label>
+        </div>
+
+        <!-- Post-Op Section -->
+        <div class="image-section">
+            <h3>Post-Op</h3>
+            <div id="postOpResult" class="image-preview">
+                <img id="postOpImage" style="display: none; max-width: 100%; height: auto;">
+                <div id="postOpPlaceholder">No Image</div>
+            </div>
+            <input type="file" name="post_op_image" id="post-op-upload" accept="image/*">
+            <label for="post-op-upload" class="custom-file-label">
+                Select Post-Op File
+            </label>
+        </div>
+    </div>
+
+    <br>
+    <button type="submit" id="addCaseBtn" disabled>Add Case</button>
+  </form>
+
+  <style>
+    .image-preview {
+        width: 200px;
+        height: 200px;
+        border: 1px solid #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+  </style>
+
+  <script>
+    const preOpInput = document.getElementById('pre-op-upload');
+    const postOpInput = document.getElementById('post-op-upload');
+    const addCaseBtn = document.getElementById('addCaseBtn');
+
+    function toggleButtonState() {
+        if (preOpInput.files.length > 0 || postOpInput.files.length > 0) {
+            addCaseBtn.disabled = false;
+        } else {
+            addCaseBtn.disabled = true;
+        }
+    }
+
+    preOpInput.addEventListener('change', toggleButtonState);
+    postOpInput.addEventListener('change', toggleButtonState);
+
+    document.getElementById('pre-op-upload').addEventListener('change', handleFileSelect);
+    document.getElementById('post-op-upload').addEventListener('change', handleFileSelect);
+
+    function handleFileSelect() {
+        const preOpFile = document.getElementById('pre-op-upload').files.length > 0;
+        const postOpFile = document.getElementById('post-op-upload').files.length > 0;
+        
+        // 显示选中的图片预览
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            const previewId = this.id === 'pre-op-upload' ? 'preOpImage' : 'postOpImage';
+            const placeholderId = this.id === 'pre-op-upload' ? 'preOpPlaceholder' : 'postOpPlaceholder';
+            
+            reader.onload = function(e) {
+                const img = document.getElementById(previewId);
+                img.src = e.target.result;
+                img.style.display = 'block';
+                document.getElementById(placeholderId).style.display = 'none';
+            };
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+        
+        // 启用/禁用添加按钮
+        addCaseBtn.disabled = !(preOpFile || postOpFile);
+    }
+  </script>
+</div>
+{% endblock %}

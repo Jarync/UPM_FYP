@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-box">
+    <h2>Patient Profile</h2>
+    <div class="profile-info">
+        <div class="info-group">
+            <label>Username:</label>
+            <span>{{ patient.username }}</span>
+        </div>
+        {% if patient.profile %}
+        <div class="info-group">
+            <label>Age:</label>
+            <span>{{ patient.profile.age if patient.profile.age else 'Not specified' }}</span>
+        </div>
+        <div class="info-group">
+            <label>Gender:</label>
+            <span>{{ patient.profile.gender if patient.profile.gender else 'Not specified' }}</span>
+        </div>
+        <div class="info-group">
+            <label>Contact:</label>
+            <span>{{ patient.profile.contact if patient.profile.contact else 'Not specified' }}</span>
+        </div>
+        {% else %}
+        <p>No profile information available.</p>
+        {% endif %}
+    </div>
+
+    <h3>Patient Cases</h3>
+    <div class="cases-list">
+        {% if cases %}
+        {% for case in cases %}
+        <div class="case-item">
+            <h4>Case #{{ case.id }}</h4>
+            <div class="case-images">
+                {% if case.pre_image %}
+                <div class="image-container">
+                    <label>Pre-Op Image:</label>
+                    <img src="data:image/png;base64,{{ case.pre_image }}" alt="Pre-op">
+                    <p>Severity: {{ case.pre_severity }}</p>
+                    {% if case.pre_ratio %}
+                        <p class="ratio-text">A/B Ratio: {{ "%.2f"|format(case.pre_ratio) }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+                {% if case.post_image %}
+                <div class="image-container">
+                    <label>Post-Op Image:</label>
+                    <img src="data:image/png;base64,{{ case.post_image }}" alt="Post-op">
+                    <p>Severity: {{ case.post_severity }}</p>
+                    {% if case.post_ratio %}
+                        <p class="ratio-text">A/B Ratio: {{ "%.2f"|format(case.post_ratio) }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No cases found for this patient.</p>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.profile-info {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.info-group {
+    margin-bottom: 15px;
+}
+
+.info-group label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #666;
+}
+
+.cases-list {
+    margin-top: 20px;
+}
+
+.case-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.case-images {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.image-container {
+    flex: 1;
+    min-width: 300px;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+}
+
+.image-container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.ratio-text {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.image-container p {
+    margin: 8px 0;
+}
+</style>
+{% endblock %} 

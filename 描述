@@ -1,0 +1,7 @@
+添加功能是：后端：py给一个路径，给到前端templates对应的html文件，css就是添加样式和装饰的，services就是外部代码：例如这个项目里是基于唇裂处理分级的代码，如果一个项目想要另一个处理代码
+只需要在service中创建多一个处理代码接入到对应的前端和后端
+装饰呢： 比如说：隐藏上传文件的按钮，然后用css去装饰
+<input type="file" name="pre_op_image" id="pre-op-upload">
+            <label for="pre-op-upload" class="custom-file-label">
+                Select Pre-Op File
+这里的Select Pre-Op File就是按钮的文字了

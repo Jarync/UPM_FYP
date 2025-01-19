@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-box">
+  <h2>Upload & Preview</h2>
+  <form id="uploadForm" method="POST" enctype="multipart/form-data">
+    <div style="display: flex; justify-content: center; gap: 50px;">
+        <!-- Pre-Op Section -->
+        <div class="image-section">
+            <h3>Pre-Op</h3>
+            <div id="preOpResult" class="image-preview">
+                <img id="preOpImage" style="display: none; max-width: 100%; height: auto;">
+                <div id="preOpPlaceholder">No Image</div>
+            </div>
+            <input type="file" name="pre_op_image" id="pre-op-upload" accept="image/*">
+            <label for="pre-op-upload" class="custom-file-label">
+                Select Pre-Op File
+            </label>
+            <div id="preOpDetails" class="details-section"></div>
+        </div>
+
+        <!-- Post-Op Section -->
+        <div class="image-section">
+            <h3>Post-Op</h3>
+            <div id="postOpResult" class="image-preview">
+                <img id="postOpImage" style="display: none; max-width: 100%; height: auto;">
+                <div id="postOpPlaceholder">No Image</div>
+            </div>
+            <input type="file" name="post_op_image" id="post-op-upload" accept="image/*">
+            <label for="post-op-upload" class="custom-file-label">
+                Select Post-Op File
+            </label>
+            <div id="postOpDetails" class="details-section"></div>
+        </div>
+    </div>
+  </form>
+
+  <hr>
+  <h3>Deformity Rating Scale (A/B)</h3>
+  <table border="1" cellpadding="5">
+    <tr>
+        <th>Variable</th>
+        <th>Class</th>
+        <th>Score</th>
+    </tr>
+    <tr>
+        <td>Alar facial symmetry ratio</td>
+        <td>Mild (0.01 - 0.05)</td>
+        <td>3</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Moderate (0.05 - 0.10)</td>
+        <td>2</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>Severe (> 0.10)</td>
+        <td>1</td>
+    </tr>
+  </table>
+</div>
+
+<style>
+.image-preview {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.details-section {
+    text-align: center;
+    margin-top: 10px;
+}
+</style>
+
+<script>
+document.getElementById('pre-op-upload').addEventListener('change', function() {
+    handleImageUpload(this, 'pre');
+});
+
+document.getElementById('post-op-upload').addEventListener('change', function() {
+    handleImageUpload(this, 'post');
+});
+
+function handleImageUpload(input, type) {
+    if (!input.files || !input.files[0]) return;
+
+    const formData = new FormData();
+    formData.append(`${type}_op_image`, input.files[0]);
+
+    // 显示加载状态
+    document.getElementById(`${type}OpPlaceholder`).textContent = 'Processing...';
+
+    fetch('{{ url_for("process_image_route") }}', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 更新图片
+            const img = document.getElementById(`${type}OpImage`);
+            img.src = `data:image/png;base64,${data.image}`;
+            img.style.display = 'block';
+            document.getElementById(`${type}OpPlaceholder`).style.display = 'none';
+
+            // 更新详情
+            document.getElementById(`${type}OpDetails`).innerHTML = `
+                <p><strong>Ratio:</strong> ${data.ratio}</p>
+                <p><strong>Severity:</strong> ${data.severity}</p>
+            `;
+        } else {
+            alert(data.error || 'Error processing image');
+            document.getElementById(`${type}OpPlaceholder`).textContent = 'No Image';
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error uploading image');
+        document.getElementById(`${type}OpPlaceholder`).textContent = 'No Image';
+    });
+}
+</script>
+{% endblock %}

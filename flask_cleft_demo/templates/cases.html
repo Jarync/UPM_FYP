@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-box">
+  <h2>Cases</h2>
+  {% if cases %}
+  <table border="1" cellpadding="5">
+      <tr>
+          <th>Case ID</th>
+          <th>Pre-Op Image</th>
+          <th>Post-Op Image</th>
+          <th>Pre-Op Severity</th>
+          <th>Post-Op Severity</th>
+          <th>Doctor Reviewed</th>
+          <th>Remove cases</th>
+      </tr>
+      {% for case in cases %}
+      <tr>
+          <td>{{ case.id }}</td>
+          <td>
+              {% if case.pre_image %}
+                  <img src="data:image/png;base64,{{ case.pre_image }}" style="width: 100px;">
+              {% else %}
+                  No Image
+              {% endif %}
+          </td>
+          <td>
+              {% if case.post_image %}
+                  <img src="data:image/png;base64,{{ case.post_image }}" style="width: 100px;">
+              {% else %}
+                  No Image
+              {% endif %}
+          </td>
+          <td>
+              {{ case.pre_severity }}
+              {% if case.pre_ratio %}
+                  <br>
+                  <span class="ratio-text">A/B Ratio: {{ "%.2f"|format(case.pre_ratio) }}</span>
+              {% endif %}
+          </td>
+          <td>
+              {{ case.post_severity }}
+              {% if case.post_ratio %}
+                  <br>
+                  <span class="ratio-text">A/B Ratio: {{ "%.2f"|format(case.post_ratio) }}</span>
+              {% endif %}
+          </td>
+          <td>{{ 'Yes' if case.doctor_reviewed else 'No' }}</td>
+          <td>
+              <form method="POST" action="{{ url_for('delete_case', case_id=case.id) }}" style="display:inline;">
+                  <button type="submit" onclick="return confirm('Are you sure you want to delete this case?');" class="btn btn-danger">Delete</button>
+              </form>
+          </td>
+      </tr>
+      {% endfor %}
+  </table>
+  {% else %}
+  <p>No cases available.</p>
+  {% endif %}
+</div>
+
+<style>
+.ratio-text {
+    font-size: 0.9em;
+    color: #666;
+    display: block;
+    margin-top: 5px;
+}
+</style>
+{% endblock %}

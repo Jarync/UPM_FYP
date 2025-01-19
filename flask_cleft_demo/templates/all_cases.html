@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="content-box">
+  <h2>All Cases</h2>
+  
+  <!-- 添加搜索框 -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search by username..." class="search-input">
+  </div>
+
+  <table border="1" cellpadding="5">
+    <tr>
+        <th>Case ID</th>
+        <th>Patient Username</th>
+        <th>Pre-Op Image</th>
+        <th>Post-Op Image</th>
+        <th>Pre-Op Severity</th>
+        <th>Post-Op Severity</th>
+        <th>Doctor Reviewed</th>
+        <th>Actions</th>
+        <th>Remove cases</th>
+    </tr>
+    {% for case in cases %}
+    <tr class="case-row">
+        <td>{{ case.id }}</td>
+        <td>
+            <a href="{{ url_for('view_patient_profile', user_id=case.user.id) }}" 
+               class="patient-link">{{ case.user.username }}</a>
+        </td>
+        <td>
+            {% if case.pre_image %}
+                <img src="data:image/png;base64,{{ case.pre_image }}" style="width: 100px;">
+            {% else %}
+                No Image
+            {% endif %}
+        </td>
+        <td>
+            {% if case.post_image %}
+                <img src="data:image/png;base64,{{ case.post_image }}" style="width: 100px;">
+            {% else %}
+                No Image
+            {% endif %}
+        </td>
+        <td>
+            {{ case.pre_severity }}
+            {% if case.pre_ratio %}
+                <br>
+                <span class="ratio-text">A/B Ratio: {{ "%.2f"|format(case.pre_ratio) }}</span>
+            {% endif %}
+        </td>
+        <td>
+            {{ case.post_severity }}
+            {% if case.post_ratio %}
+                <br>
+                <span class="ratio-text">A/B Ratio: {{ "%.2f"|format(case.post_ratio) }}</span>
+            {% endif %}
+        </td>
+        <td>{{ 'Yes' if case.doctor_reviewed else 'No' }}</td>
+        <td>
+            <a href="{{ url_for('review_case', case_id=case.id) }}">Review</a>
+        </td>
+        <td>
+            <form method="POST" action="{{ url_for('delete_case', case_id=case.id) }}" style="display:inline;">
+                <button type="submit" onclick="return confirm('Are you sure you want to delete this case?');" class="btn btn-danger">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<style>
+.patient-link {
+    color: #2196F3;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.patient-link:hover {
+    color: #1976D2;
+    text-decoration: underline;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: 600;
+    padding: 15px 12px;
+    transition: background-color 0.3s ease;
+}
+
+th:hover {
+    background-color: #45a049;
+}
+
+tr:hover {
+    background-color: #f9f9f9;
+}
+
+/* 添加搜索框样式 */
+.search-container {
+    margin: 20px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.search-input {
+    padding: 10px 15px;
+    width: 300px;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(76,175,80,0.5);
+    width: 350px;
+}
+
+.search-input::placeholder {
+    color: #999;
+}
+
+/* 隐藏的行样式 */
+.hidden {
+    display: none;
+}
+
+.ratio-text {
+    font-size: 0.9em;
+    color: #666;
+    display: block;
+    margin-top: 5px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const rows = document.querySelectorAll('.case-row');
+
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+
+        rows.forEach(row => {
+            const username = row.querySelector('.patient-link').textContent.toLowerCase();
+            if (username.includes(searchTerm)) {
+                row.classList.remove('hidden');
+            } else {
+                row.classList.add('hidden');
+            }
+        });
+    });
+
+    // 添加清除搜索的功能
+    searchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Escape') {
+            this.value = '';
+            rows.forEach(row => row.classList.remove('hidden'));
+        }
+    });
+});
+</script>
+{% endblock %}
